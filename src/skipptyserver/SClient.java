@@ -102,16 +102,13 @@ public class SClient {
                             break;
                     }
 
-                } catch (IOException ex) {
-                    Logger.getLogger(SClient.class.getName()).log(Level.SEVERE, null, ex);
-                    //client bağlantısı koparsa listeden sil
-                    Server.Clients.remove(TheClient);
-
-                } catch (ClassNotFoundException ex) {
+                } catch (IOException | ClassNotFoundException ex) {
                     Logger.getLogger(SClient.class.getName()).log(Level.SEVERE, null, ex);
                     //client bağlantısı koparsa listeden sil
                     Server.Clients.remove(TheClient);
                 }
+                //client bağlantısı koparsa listeden sil
+
             }
 
         }
@@ -151,6 +148,9 @@ public class SClient {
                                     crival.rival = TheClient;
                                     TheClient.rival = crival;
                                     TheClient.paired = true;
+                                    Message msg1 = new Message(Message.Message_Type.YourTurn);
+                                    msg1.content = true;
+                                    Server.Send(TheClient, msg1);
                                     break;
                                 }
                             }
