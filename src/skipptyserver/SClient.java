@@ -87,7 +87,7 @@ public class SClient {
                             break;
                         case Disconnect:
                             break;
-                        case Text:
+                        case Move:
                             //gelen metni direkt rakibe gönder
                             Server.Send(TheClient.rival, received);
                             break;
@@ -96,6 +96,7 @@ public class SClient {
                             Server.Send(TheClient.rival, received);
                             break;
                         case Bitis:
+                            Server.Send(TheClient.rival, received);
                             break;
                         case RivalConnected:
                             Server.Send(TheClient.rival, received);
@@ -106,6 +107,7 @@ public class SClient {
                     Logger.getLogger(SClient.class.getName()).log(Level.SEVERE, null, ex);
                     //client bağlantısı koparsa listeden sil
                     Server.Clients.remove(TheClient);
+                    this.stop();
                 }
                 //client bağlantısı koparsa listeden sil
 
@@ -161,6 +163,14 @@ public class SClient {
                         //eşleşme oldu
                         //her iki tarafada eşleşme mesajı gönder 
                         //oyunu başlat
+                        Message mesaj = new Message(Message.Message_Type.Name);
+                        mesaj.content = TheClient.name;
+                        Server.Send(TheClient.rival, mesaj);
+                        
+                        Message mesaj2 = new Message(Message.Message_Type.Name);
+                        mesaj2.content = TheClient.rival.name;
+                        Server.Send(TheClient, mesaj2);
+                        
                         Message msg1 = new Message(Message.Message_Type.RivalConnected);
                         msg1.content = Server.gameBoard;
                         Server.Send(TheClient.rival, msg1);
@@ -168,6 +178,8 @@ public class SClient {
                         Message msg2 = new Message(Message.Message_Type.RivalConnected);
                         msg2.content = Server.gameBoard;
                         Server.Send(TheClient, msg2);
+                        
+                        
                     }
                     //lock mekanizmasını servest bırak
                     //bırakılmazsa deadlock olur.
