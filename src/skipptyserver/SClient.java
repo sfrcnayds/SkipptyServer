@@ -96,6 +96,7 @@ public class SClient {
                             //gelen seçim yapıldı mesajını rakibe gönder
                             Server.Send(TheClient.rival, received);
                             break;
+                        //Oyun bittikten sonra clientten gelen mesaj
                         case Bitis:
                             TheClient.gameScore = (int) received.content;
                             Server.Send(TheClient.rival, received);
@@ -103,10 +104,12 @@ public class SClient {
                         case RivalConnected:
                             Server.Send(TheClient.rival, received);
                             break;
+                        //Oyun bittikten sonra rakipten gelen mesaj
                         case BitisRakip:
                             Message msg = new Message(Message.Message_Type.Sonuc);
                             Message msg2 = new Message(Message.Message_Type.Sonuc);
                             TheClient.gameScore = (int) received.content;
+                            //Kazananı Belirleyip mesaj gönderme
                             if (TheClient.gameScore > TheClient.rival.gameScore) {
                                 msg.content = "Won";
                                 msg2.content = "Lose";
