@@ -12,7 +12,7 @@ package game;
 
 public class Message implements java.io.Serializable {
     //mesaj tipleri enum 
-    public static enum Message_Type {None, Name, Disconnect,RivalConnected, Move, Selected, Bitis,Start,StartGameBoard,YourTurn}
+    public static enum Message_Type {None, Name, Disconnect,RivalConnected, Move, Selected, Bitis,Start,StartGameBoard,YourTurn,BitisRakip,Sonuc}
     //mesajın tipi
     public Message_Type type;
     //mesajın içeriği obje tipinde ki istenilen tip içerik yüklenebilsin

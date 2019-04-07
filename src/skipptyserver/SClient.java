@@ -34,6 +34,7 @@ public class SClient {
     SClient rival;
     //eşleşme durumu
     public boolean paired = false;
+    int gameScore;
 
     public SClient(Socket gelenSoket, int id) {
         this.soket = gelenSoket;
@@ -96,10 +97,28 @@ public class SClient {
                             Server.Send(TheClient.rival, received);
                             break;
                         case Bitis:
+                            TheClient.gameScore = (int) received.content;
                             Server.Send(TheClient.rival, received);
                             break;
                         case RivalConnected:
                             Server.Send(TheClient.rival, received);
+                            break;
+                        case BitisRakip:
+                            Message msg = new Message(Message.Message_Type.Sonuc);
+                            Message msg2 = new Message(Message.Message_Type.Sonuc);
+                            TheClient.gameScore = (int) received.content;
+                            if (TheClient.gameScore > TheClient.rival.gameScore) {
+                                msg.content = "Won";
+                                msg2.content = "Lose";
+                            }else if (TheClient.gameScore == TheClient.rival.gameScore){
+                                msg.content = "Tie";
+                                msg2.content = "Tie";
+                            }else{
+                                msg.content = "Lose";
+                                msg2.content = "Win";
+                            }
+                            Server.Send(TheClient, msg);
+                            Server.Send(TheClient.rival, msg2);
                             break;
                     }
 
@@ -166,11 +185,11 @@ public class SClient {
                         Message mesaj = new Message(Message.Message_Type.Name);
                         mesaj.content = TheClient.name;
                         Server.Send(TheClient.rival, mesaj);
-                        
+
                         Message mesaj2 = new Message(Message.Message_Type.Name);
                         mesaj2.content = TheClient.rival.name;
                         Server.Send(TheClient, mesaj2);
-                        
+
                         Message msg1 = new Message(Message.Message_Type.RivalConnected);
                         msg1.content = Server.gameBoard;
                         Server.Send(TheClient.rival, msg1);
@@ -178,8 +197,7 @@ public class SClient {
                         Message msg2 = new Message(Message.Message_Type.RivalConnected);
                         msg2.content = Server.gameBoard;
                         Server.Send(TheClient, msg2);
-                        
-                        
+
                     }
                     //lock mekanizmasını servest bırak
                     //bırakılmazsa deadlock olur.
